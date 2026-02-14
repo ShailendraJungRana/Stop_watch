@@ -1,43 +1,43 @@
-name: notify slack
+# name: notify slack
 
-on:
-  pull_request:
-    types: [opened]
-
-env:
-  SLACK_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-jobs:
-  send-notification:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Notify Slack
-        run: |
-          curl -X POST -H 'Content-type: application/json' -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN}}' --data "{\"channel\":\"myappalerts\",\"text\":\"New PR created\\nDetails: *${{github.event.pull_request.title}}*\\nAuthor: *${{github.event.pull_request.user.login}}*\\n${{github.event.pull_request.html_url}}\"}" https://slack.com/api/chat.postMessage
-
-# name: slack notify
 # on:
-#   push:
+#   pull_request:
+#     types: [opened]
+
+# env:
+#   SLACK_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
 # jobs:
-#   build:
+#   send-notification:
 #     runs-on: ubuntu-latest
-#     steps:
-#       - uses: action/checkout@v3
-#       - name: Run test
-#         run: |
-#           npm install
-#           npm test
 
-#       - name: slack notify
-#         uses: slackapi/slack-github-action@v2.1.1
-#         with:
-#           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-#           payloads: |
-#           {
-#            "text": ${{ job.status == "success" && ':white_check_mark: *Job Passed!*✅' || ':x: *Job Failed!*❌'  }}
-#           }
-#         env:
-#           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-#         if: always() 
+#     steps:
+#       - name: Notify Slack
+#         run: |
+#           curl -X POST -H 'Content-type: application/json' -H 'Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN}}' --data "{\"channel\":\"myappalerts\",\"text\":\"New PR created\\nDetails: *${{github.event.pull_request.title}}*\\nAuthor: *${{github.event.pull_request.user.login}}*\\n${{github.event.pull_request.html_url}}\"}" https://slack.com/api/chat.postMessage
+
+name: slack notify
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v3
+      - name: Run test
+        run: |
+          npm install
+          npm test
+
+      - name: slack notify
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payloads: |
+          {
+           "text": ${{ job.status == "success" && ':white_check_mark: *Job Passed!*✅' || ':x: *Job Failed!*❌'  }}
+          }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        if: always() 
