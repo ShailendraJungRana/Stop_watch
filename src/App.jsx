@@ -5,6 +5,7 @@ function App() {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
+  #test
 
   const start = () => {
     if (!isRunning) {
